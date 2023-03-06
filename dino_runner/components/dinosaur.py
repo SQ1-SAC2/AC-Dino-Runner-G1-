@@ -68,8 +68,6 @@ class Dinosaur(Sprite):
             self.action = DINO_RUNNING
             self.rect.y = self.POSITION_Y
         
-        if self.rect.y > self.POSITION_Y:
-            self.action = DINO_RUNNING
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
