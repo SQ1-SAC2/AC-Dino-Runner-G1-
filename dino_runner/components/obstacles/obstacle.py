@@ -1,5 +1,5 @@
-from pygame import Surface
 from pygame.sprite import Sprite
+from pygame import Surface
 
 from dino_runner.utils.constants import SCREEN_WIDTH
 
