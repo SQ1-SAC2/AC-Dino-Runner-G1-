@@ -6,7 +6,7 @@ class ObstacleManager:
     def __init__(self):
         self.obstacles = []
 
-    def update(self, game_speed, player, game):
+    def update(self, game_speed, game):
         if not self.obstacles:
             self.obstacles.append(Cactus())
 

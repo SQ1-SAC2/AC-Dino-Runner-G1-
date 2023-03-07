@@ -11,12 +11,12 @@ DINO_DUCKING =  "ducking"
 class Dinosaur(Sprite):
     POSITION_X = 80
     POSITION_Y = 310
-    DUCK_POSITION_Y = 340
+    DUCK_POSITION_Y = 343
     JUMP_VELOCITY = 8.5
 
     def __init__(self):
         self.update_image = RUNNING[0]
-        self.action = DINO_RUNNING
+        self.rect = self.image.get_rect()
         self.jump_velocity = self.JUMP_VELOCITY
         self.step = 0
 
