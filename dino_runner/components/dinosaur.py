@@ -15,7 +15,7 @@ class Dinosaur(Sprite):
     JUMP_VELOCITY = 8.5
 
     def __init__(self):
-        self.update_image = RUNNING[0]
+        self.update_image(RUNNING[0])
         self.action = DINO_RUNNING
         self.jump_velocity = self.JUMP_VELOCITY
         self.step = 0
@@ -61,6 +61,7 @@ class Dinosaur(Sprite):
 
     def update_image(self, image: pygame.Surface, pos_x = None, pos_y = None):
         self.image = image
+        self.rect = self.image.get_rect()
         self.rect.x = pos_x or self.POSITION_X
         self.rect.y = pos_y or self.POSITION_Y
 

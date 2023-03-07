@@ -6,12 +6,12 @@ class ObstacleManager:
     def __init__(self):
         self.obstacles = []
 
-    def update(self, game_speed, game):
+    def update(self, game):
         if not self.obstacles:
             self.obstacles.append(Cactus())
 
         for obstacle in self.obstacles:
-            obstacle.update(game_speed, self.obstacles)
+            obstacle.update(game.game_speed, self.obstacles)
             if game.rect.colliderect(obstacle.rect):
                 pygame.time.delay(500)
                 game.playing = False
