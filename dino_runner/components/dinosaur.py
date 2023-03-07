@@ -16,7 +16,7 @@ class Dinosaur(Sprite):
 
     def __init__(self):
         self.update_image = RUNNING[0]
-        self.rect = self.image.get_rect()
+        self.action = DINO_RUNNING
         self.jump_velocity = self.JUMP_VELOCITY
         self.step = 0
 
