@@ -76,23 +76,36 @@ class Game:
     def on_death(self):
         self.playing = False
         self.death_count += 1
+        if self.show_menu():
+            self.score.score = 0
 
     def show_menu(self):
         self.screen.fill((255, 255, 255))
         half_screen_width = SCREEN_WIDTH // 2 
         half_screen_height = SCREEN_HEIGHT // 2
+        menu_screen_width = half_screen_width - 200
         if not self.death_count:
-            font = pygame.font.Font(FONT_STYLE, 32)
-            text = font.render("Welcome, press any key to start", True, (0, 0, 0))
-            text_rect = text.get_rect()
-            text_rect.center = (half_screen_width, half_screen_height)
-            self.screen.blit(text, text_rect)
+            self.print_text("Welcome to the Dino Game!", 32, half_screen_width, half_screen_height +20)
+            self.print_text("Press any key to start", 20, half_screen_width, half_screen_height +60)
         else:
-            pass
+            self.print_text("Game Over :(", 32, half_screen_width, half_screen_height +20)
+            self.print_text(f"Actual Score: {self.score.score}", 20, menu_screen_width, 
+                            half_screen_height + 80)
+            self.print_text(f"Number of Deaths: {self.death_count}", 20, 
+                            menu_screen_width -30, half_screen_height + 110)
+
 
         self.screen.blit(DINO_START, (half_screen_width - 40, half_screen_height - 140))
         pygame.display.update()
         self.handle_menu_events()
+
+    def print_text(self, message, size, text_x_position, text_y_position):
+        font = pygame.font.Font(FONT_STYLE, size)
+        text = font.render(message, True, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.center = (text_x_position, text_y_position)
+        self.screen.blit(text, text_rect)
+
 
     def handle_menu_events(self):
         for event in pygame.event.get():
