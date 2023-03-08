@@ -2,6 +2,7 @@
     "cSpell.words": [
         "blit",
         "colliderect",
+        "KEYDOWN",
         "pygame"
     ]
 }
