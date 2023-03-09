@@ -1,12 +1,10 @@
 import pygame
+
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
 from dino_runner.components.score import Score
-
-
-
-from dino_runner.utils.constants import BG, DINO_START, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, SHIELD_TYPE, TITLE, FPS
+from dino_runner.utils.constants import BG, DEFAULT_TYPE, DINO_DEAD, DINO_FALL_XL, DINO_GAME_OVER, DINO_RUN_XL, FONT_STYLE, GAME_TITLE, HAMMER_TYPE, HEART, ICON, RESET, SCREEN_HEIGHT, SCREEN_WIDTH, SELF_LOGO, SHIELD_TYPE, SNEAKERS_TYPE, TITLE, FPS
 
 
 class Game:
@@ -28,9 +26,8 @@ class Game:
         self.power_up_manager = PowerUpManager()
         self.death_count = 0
 
+
     def run(self):
-        if self.score.score > 0:
-            self.score.score = 0
         self.executing = True
         while self.executing:
             if not self.playing:
@@ -39,8 +36,8 @@ class Game:
         pygame.quit()
 
     def start_game(self):
-        # Game loop: events - update - draw
         self.playing = True
+        self.player.lifes = 1
         self.obstacle_manager.reset()
         self.power_up_manager.reset()
         while self.playing:
@@ -75,6 +72,8 @@ class Game:
         pygame.display.flip()
 
     def draw_background(self):
+        self.screen.blit(HEART, (800, 50))
+        self.print_text(f"Life: {self.player.lifes}", 0, 20, 900, 70)
         image_width = BG.get_width()
         self.screen.blit(BG, (self.x_pos_bg, self.y_pos_bg))
         self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
@@ -84,32 +83,44 @@ class Game:
         self.x_pos_bg -= self.game_speed
 
     def on_death(self):
-        is_invincible = self.player.type == SHIELD_TYPE
-        if not is_invincible:
-            pygame.time.delay(500)
-            self.playing = False
-            self.death_count += 1
+        is_shield_invincible = self.player.type == SHIELD_TYPE
+        if not is_shield_invincible:
+            if self.player.type == DEFAULT_TYPE:
+                self.player.lifes -= 1
+                if self.player.lifes == 0:
+                    pygame.time.delay(1000)
+                    self.playing = False
+                    self.death_count += 1
+                    self.handle_menu_events()
+            elif self.player.type == HAMMER_TYPE:
+                self.player.lifes += 1
 
     def show_menu(self):
-        self.screen.fill((255, 255, 255))
+        self.screen.fill((200, 200, 200))
         half_screen_width = SCREEN_WIDTH // 2 
         half_screen_height = SCREEN_HEIGHT // 2
-        menu_screen_width = half_screen_width - 200
         if not self.death_count:
-            self.print_text("Welcome to the Dino Game!", 0, 32, 
-                            half_screen_width, half_screen_height +20)
+            self.screen.blit(DINO_RUN_XL, (-100, 100))
+            self.screen.blit(GAME_TITLE, (half_screen_width - 80, half_screen_height - 140))
+            self.screen.blit(SELF_LOGO, (950, 540))
+
             self.print_text("Press any key to start", 0, 20, 
-                            half_screen_width, half_screen_height +60)
+                            half_screen_width +100, half_screen_height +20)
         else:
-            self.print_text("Game Over :(", 0, 32, 
-                            half_screen_width, half_screen_height +20)
+            self.screen.blit(DINO_FALL_XL, (0, 400))
+            self.screen.blit(DINO_DEAD, (half_screen_width - 20, half_screen_height - 230))
+            self.screen.blit(DINO_GAME_OVER, (half_screen_width - 180, half_screen_height - 130))
+            self.screen.blit(RESET, (780, 450))
+
             self.print_text(f"Actual Score: {self.score.score}", 0, 20, 
-                            menu_screen_width, half_screen_height + 80)
+                            half_screen_width, half_screen_height -50)
+            self.print_text(f"High Score: {self.score.max_score}", 0, 20, 
+                            half_screen_width, half_screen_height - 10)
             self.print_text(f"Number of Deaths: {self.death_count}", 0, 20, 
-                            menu_screen_width -30, half_screen_height + 110)
+                            half_screen_width, half_screen_height + 30)
+            self.print_text("Press any button to play again! ", 0, 20, 
+                            820, 550)
 
-
-        self.screen.blit(DINO_START, (half_screen_width - 40, half_screen_height - 140))
         pygame.display.update()
         self.handle_menu_events()
 
@@ -127,4 +138,5 @@ class Game:
                 self.executing = False
 
             if event.type == pygame.KEYDOWN:
+                self.score.score = 0
                 self.start_game()
