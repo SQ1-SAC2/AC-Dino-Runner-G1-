@@ -12,10 +12,12 @@ class Score:
         if self.score % 1000 == 0:
             game.game_speed += 5
 
+
     def draw(self, screen):
-        font = pygame.font.Font(FONT_STYLE, 24)
-        text = font.render(
-            f"Score: {self.score}", True, (0, 0, 0))
+        font = pygame.font.Font(FONT_STYLE[0], 24)
+        text = font.render(f"Score: {self.score}", True, (0 ,0 ,0))
         text_rect = text.get_rect()
         text_rect.center = (950, 30)
         screen.blit(text, text_rect)
+
+
